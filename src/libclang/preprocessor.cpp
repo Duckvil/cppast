@@ -654,6 +654,11 @@ bool starts_with(const position& p, const char (&str)[N])
     return std::strncmp(p.ptr(), str, N - 1) == 0;
 }
 
+bool starts_with(const position& p, const std::string& str)
+{
+    return starts_with(p, str.c_str(), str.length());
+}
+
 void skip(position& p, const char* str)
 {
     DEBUG_ASSERT(starts_with(p, str, std::strlen(str)), detail::assert_handler{});

@@ -123,6 +123,15 @@ void add_base_class(cpp_class::builder& builder, const detail::parse_context& co
 }
 } // namespace
 
+unsigned get_line_no(const CXCursor& cursor)
+{
+    auto loc = clang_getCursorLocation(cursor);
+
+    unsigned line;
+    clang_getPresumedLocation(loc, nullptr, &line, nullptr);
+    return line;
+}
+
 std::unique_ptr<cpp_entity> detail::parse_cpp_class(const detail::parse_context& context,
                                                     const CXCursor& cur, const CXCursor& parent_cur)
 {
@@ -176,7 +185,11 @@ std::unique_ptr<cpp_entity> detail::parse_cpp_class(const detail::parse_context&
                 // other children due to templates and stuff
                 return;
             else if (auto entity = parse_entity(context, &builder.get(), child))
+            {
+                entity->set_line(get_line_no(child));
+
                 builder.add_child(std::move(entity));
+            }
         });
     }
 

@@ -633,6 +633,8 @@ try
                                   detail::comment_context(preprocessed.comments),
                                   false};
     detail::visit_tu(tu, path.c_str(), [&](const CXCursor& cur) {
+        uint32_t loc = get_line_no(cur);
+
         if (clang_getCursorKind(cur) == CXCursor_InclusionDirective)
         {
             if (!preprocessed.includes.empty())
@@ -661,6 +663,7 @@ try
                 context.comments.match(*include, include_iter->line,
                                        false); // must not skip comments,
                                                // includes are not reported in order
+                include->set_line(loc);
                 builder.add_child(std::move(include));
 
                 ++include_iter;
@@ -672,11 +675,19 @@ try
             // add macro if needed
             for (auto line = get_line_no(cur);
                  macro_iter != preprocessed.macros.end() && macro_iter->line <= line; ++macro_iter)
+            {
+                macro_iter->macro->set_line(loc);
+
                 builder.add_child(std::move(macro_iter->macro));
+            }
 
             auto entity = detail::parse_entity(context, &builder.get(), cur);
             if (entity)
+            {
+                entity->set_line(loc);
+
                 builder.add_child(std::move(entity));
+            }
         }
     });
 

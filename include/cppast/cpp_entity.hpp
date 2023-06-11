@@ -115,6 +115,16 @@ public:
         comment_ = comment.value_or("");
     }
 
+    void set_line(uint32_t line) noexcept
+    {
+        line_ = line;
+    }
+
+    uint32_t get_line() const noexcept
+    {
+        return line_;
+    }
+
     /// \returns The list of attributes that are specified for that entity.
     const cpp_attribute_list& attributes() const noexcept
     {
@@ -152,7 +162,7 @@ public:
     }
 
     /// \effects Creates it giving it the the name.
-    cpp_entity(std::string name) : name_(std::move(name)), user_data_(nullptr) {}
+    cpp_entity(std::string name) : name_(std::move(name)), user_data_(nullptr), line_(0) {}
 
 private:
     /// \returns The kind of the entity.
@@ -175,6 +185,7 @@ private:
     cpp_attribute_list                        attributes_;
     type_safe::optional_ref<const cpp_entity> parent_;
     mutable std::atomic<void*>                user_data_;
+    uint32_t                                  line_;
 
     template <typename T>
     friend struct detail::intrusive_list_access;

@@ -199,6 +199,11 @@ private:
     cpp_include_kind kind_;
     std::string      full_path_;
 };
+
+class cpp_macro_use final : public cpp_entity
+{
+    
+};
 } // namespace cppast
 
 #endif // CPPAST_CPP_PREPROCESSOR_HPP_INCLUDED

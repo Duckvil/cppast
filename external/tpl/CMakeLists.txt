@@ -8,7 +8,7 @@ else()
   option(BUILD_TESTING "set ON to build library tests" OFF)
 endif()
 
-add_library(tiny-process-library process.cpp)
+add_library(tiny-process-library STATIC process.cpp)
 add_library(tiny-process-library::tiny-process-library ALIAS tiny-process-library)
 
 if(MSVC)
